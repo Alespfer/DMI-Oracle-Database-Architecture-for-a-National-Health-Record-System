@@ -150,7 +150,7 @@ erDiagram
     MEDICATION ||--o{ PRESCRIPTION_LINE_MED : "concerns"
 ```
 
-> **For a detailed analysis of the complete schema with all 46 tables, please consult the [Project Wiki](https://github.com/Alespfer/DMI-Oracle-Database-Architecture-for-a-National-Health-Record-System/wiki/Detailed-Database-Schema).**
+> **For a detailed analysis of the complete schema with all 46 tables, please consult the [Project Wiki](https://github.com/Alespfer/DMI-Oracle-Database-Architecture-for-a-National-Health-Record-System/wiki/Database-Design-and-Modeling).**
 
 ## Table of Contents
 - [About The Project](#about-the-project)
