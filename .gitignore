@@ -1,0 +1,10 @@
+# Fichiers de sortie des scripts SQL*Plus
+*.txt
+*.log
+
+# Fichiers de configuration des clients SQL
+/.dbeaver/
+/.sqldeveloper/
+
+# Fichiers système
+.DS_Store
