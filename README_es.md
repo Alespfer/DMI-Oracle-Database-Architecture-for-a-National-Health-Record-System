@@ -163,7 +163,7 @@ erDiagram
     MEDICAMENTO ||--o{ LINEA_PRESCRIPCION_MED : "concierne"
 ```
 
-> **Para un análisis detallado del esquema completo con sus 46 tablas, por favor consulte la [Wiki del Proyecto](https://github.com/Alespfer/DMI-Oracle-Database-Architecture-for-a-National-Health-Record-System/wiki/Esquema-de-Datos-Detallado).**
+> **Para un análisis detallado del esquema completo con sus 46 tablas, por favor consulte la [Wiki del Proyecto](https://github.com/Alespfer/DMI-Oracle-Database-Architecture-for-a-National-Health-Record-System/wiki/Diseño-y-modelado-de-la-base-de-datos).**
 
 ## Índice
 - [Sobre el Proyecto](#sobre-el-proyecto)
