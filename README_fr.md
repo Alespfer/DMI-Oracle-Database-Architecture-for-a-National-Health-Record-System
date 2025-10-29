@@ -23,51 +23,142 @@ erDiagram
     classDef referentiels fill:#95a5a6,stroke:#7f8c8d,color:white
     classDef associations fill:#ecf0f1,stroke:#bdc3c7,color:black
 
-    %% Entités
-    PATIENT { int id_patient PK; varchar numero_ss UK "Numéro de Sécurité Sociale"; varchar nom; varchar prenom; int id_medecin_traitant FK; int id_adresse FK }
-    PROFESSIONNEL { int id_professionnel PK; varchar numero_rpps UK "Numéro RPPS"; varchar nom; varchar prenom; int id_type_pro FK; int id_service FK }
-    ETABLISSEMENT { int id_etablissement PK; varchar nom }
-    SERVICE { int id_service PK; varchar libelle; int id_etablissement FK; int id_responsable FK }
-    ADRESSE { int id_adresse PK; varchar rue }
-    HOSPITALISATION { int id_hospitalisation PK; varchar num_dossier UK; date date_debut; int id_patient FK; int id_service FK; int id_type_sortie FK }
-    ACTE_REALISE { int id_acte PK; date date_debut; int id_patient FK; int id_type_acte FK; int id_professionnel_realisateur FK; int id_hospitalisation FK }
-    PRESCRIPTION { int id_prescription PK; date date_prescription; int id_patient FK; int id_prescripteur FK; int id_hospitalisation FK }
-    EXAMEN { int id_examen PK; date date_examen; int id_patient FK; int id_type_examen FK; int id_professionnel_realisateur FK; int id_hospitalisation FK }
-    TYPE_PRO { int id_type_pro PK }
-    SPECIALITE { int id_specialite PK }
-    TYPE_ACTE_REFERENTIEL { int id_type_acte PK }
-    TYPE_EXAMEN { int id_type_examen PK }
-    MEDICAMENT { int id_medicament PK }
-    PROFESSIONNEL_SPECIALITE { int id_professionnel FK; int id_specialite FK }
-    LIGNE_PRESCRIPTION_MEDICAMENT { int id_ligne_medicament PK; int id_prescription FK; int id_medicament FK }
+    %% DOMAINE 1: Acteurs (Bleu)
+    PATIENT {
+        int id_patient PK
+        varchar numero_ss UK "Numéro de Sécurité Sociale"
+        varchar nom
+        varchar prenom
+        int id_medecin_traitant FK
+        int id_adresse FK
+    }
+    PROFESSIONNEL {
+        int id_professionnel PK
+        varchar numero_rpps UK "Numéro RPPS"
+        varchar nom
+        varchar prenom
+        int id_type_pro FK
+        int id_service FK
+    }
 
-    %% Application des styles
+    %% DOMAINE 2: Structures (Vert)
+    ETABLISSEMENT {
+        int id_etablissement PK
+        varchar nom
+    }
+    SERVICE {
+        int id_service PK
+        varchar libelle
+        int id_etablissement FK
+        int id_responsable FK
+    }
+    ADRESSE {
+        int id_adresse PK
+        varchar rue
+        varchar ville
+    }
+
+    %% DOMAINE 3: Événements Cliniques (Orange)
+    HOSPITALISATION {
+        int id_hospitalisation PK
+        varchar num_dossier UK
+        date date_debut
+        date date_fin
+        int id_patient FK
+        int id_service FK
+    }
+    ACTE_REALISE {
+        int id_acte PK
+        date date_debut
+        int id_patient FK
+        int id_type_acte FK
+        int id_professionnel_realisateur FK
+        int id_hospitalisation FK
+    }
+    PRESCRIPTION {
+        int id_prescription PK
+        date date_prescription
+        int id_patient FK
+        int id_prescripteur FK
+        int id_hospitalisation FK
+    }
+    EXAMEN {
+        int id_examen PK
+        date date_examen
+        int id_patient FK
+        int id_type_examen FK
+        int id_professionnel_realisateur FK
+        int id_hospitalisation FK
+    }
+
+    %% DOMAINE 4: Référentiels (Gris)
+    TYPE_PRO {
+        int id_type_pro PK
+        varchar libelle
+    }
+    SPECIALITE {
+        int id_specialite PK
+        varchar libelle
+    }
+    TYPE_ACTE_REFERENTIEL {
+        int id_type_acte PK
+        varchar libelle
+    }
+    TYPE_EXAMEN {
+        int id_type_examen PK
+        varchar libelle
+    }
+    MEDICAMENT {
+        int id_medicament PK
+        varchar nom
+    }
+    
+    %% DOMAINE 5: Tables d'Association (Gris clair)
+    PROFESSIONNEL_SPECIALITE {
+        int id_professionnel FK
+        int id_specialite FK
+    }
+    LIGNE_PRESCRIPTION_MEDICAMENT {
+        int id_ligne_medicament PK
+        int id_prescription FK
+        int id_medicament FK
+    }
+
+    %% Application des classes de couleur
     class PATIENT,PROFESSIONNEL acteurs
     class ETABLISSEMENT,SERVICE,ADRESSE structures
     class HOSPITALISATION,ACTE_REALISE,PRESCRIPTION,EXAMEN evenements
     class TYPE_PRO,SPECIALITE,TYPE_ACTE_REFERENTIEL,TYPE_EXAMEN,MEDICAMENT referentiels
     class PROFESSIONNEL_SPECIALITE,LIGNE_PRESCRIPTION_MEDICAMENT associations
     
-    %% Relations
+    %% Définition des relations
     PATIENT ||--|{ HOSPITALISATION : "subit"
     PATIENT ||--|{ ACTE_REALISE : "reçoit"
     PATIENT ||--|{ PRESCRIPTION : "reçoit"
+    PATIENT ||--|{ EXAMEN : "passe"
     PATIENT }|--|| ADRESSE : "réside à"
     PATIENT }o--|| PROFESSIONNEL : "a pour médecin traitant"
-    PROFESSIONNEL }o--|| SERVICE : "travaille dans"
+
     PROFESSIONNEL ||--o{ PRESCRIPTION : "prescrit"
-    PROFESSIONNEL_SPECIALITE }|--|| PROFESSIONNEL
-    PROFESSIONNEL_SPECIALITE }|--|| SPECIALITE
-    SERVICE }|--|| ETABLISSEMENT : "fait partie de"
-    SERVICE ||--|{ HOSPITALISATION : "accueille"
+    PROFESSIONNEL ||--o{ ACTE_REALISE : "réalise"
+    PROFESSIONNEL ||--|{ PROFESSIONNEL_SPECIALITE : "a"
+    PROFESSIONNEL }o--|| SERVICE : "travaille dans"
+    PROFESSIONNEL }o--|| SERVICE : "est responsable de"
+    
     HOSPITALISATION ||--o{ ACTE_REALISE : "inclut"
     HOSPITALISATION ||--o{ PRESCRIPTION : "inclut"
     HOSPITALISATION ||--o{ EXAMEN : "inclut"
-    PRESCRIPTION ||--|{ LIGNE_PRESCRIPTION_MEDICAMENT : "détaille"
-    LIGNE_PRESCRIPTION_MEDICAMENT }|--|| MEDICAMENT
-    ACTE_REALISE }|--|| TYPE_ACTE_REFERENTIEL
-    PROFESSIONNEL }|--|| TYPE_PRO
-    EXAMEN }|--|| TYPE_EXAMEN
+
+    SERVICE ||--|{ HOSPITALISATION : "accueille"
+    SERVICE }|--|| ETABLISSEMENT : "fait partie de"
+
+    PRESCRIPTION ||--|{ LIGNE_PRESCRIPTION_MEDICAMENT : "contient"
+    
+    SPECIALITE ||--|{ PROFESSIONNEL_SPECIALITE : "est détenue par"
+    TYPE_PRO ||--|{ PROFESSIONNEL : "est de type"
+    TYPE_ACTE_REFERENTIEL ||--|{ ACTE_REALISE : "est de type"
+    TYPE_EXAMEN ||--|{ EXAMEN : "est de type"
+    MEDICAMENT ||--o{ LIGNE_PRESCRIPTION_MEDICAMENT : "concerne"
 ```
 
 > **Pour une analyse détaillée du schéma complet et de ses 46 tables, veuillez consulter le [Wiki du projet](https://github.com/Alespfer/DMI-Oracle-Database-Architecture-for-a-National-Health-Record-System/wiki/Schéma-de-Données-Détaillé).**
